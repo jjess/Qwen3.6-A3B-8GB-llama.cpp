@@ -25,6 +25,13 @@ set -euo pipefail
 #	sleep seconds 10min
 # 	--sleep-idle-seconds 600
 #
+#
+#	cache ram
+#	increase it could lead to quick ram consumption
+#	--cache-ram 4096 \
+#	--cache-ram 2048 \
+#
+
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 #LLAMA="$ROOT/llama.cpp/build/bin/Release"
@@ -44,7 +51,7 @@ exec "$LLAMA/llama-server" \
   -c 196608 \
   -b 4096 \
   -ub 512 \
-  --cache-ram 2048 \
+  --cache-ram 4096 \
   --ctx-checkpoints 8 \
   --checkpoint-min-step 2048 \
   -fa on \
