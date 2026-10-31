@@ -1,6 +1,30 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+
+# 20261031:
+# 	MTP (multitoken prediction)
+# 	--spec-type draft-mtp --spec-draft-n-max 3
+#
+#	-np: number of parallel inference slots
+#	-cb: continuous batching
+#	concurrent demands to the model
+# 	it requires more memory so context is decreased to 192K
+#	-np 3 -cb
+#       -np 2 -cb
+#
+#	context 256K
+#	  -c 262144 \
+#	context 192K
+#	  -c 196608 \
+#	context 150K
+#	  -c 153600 \
+#	context 128K
+#	  -c 131072 \
+#
+#	sleep seconds 10min
+# 	--sleep-idle-seconds 600
+#
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 #LLAMA="$ROOT/llama.cpp/build/bin/Release"
@@ -17,7 +41,7 @@ exec "$LLAMA/llama-server" \
   --n-cpu-moe 4 \
   --fit off \
   --load-mode none \
-  -c 262144 \
+  -c 196608 \
   -b 4096 \
   -ub 512 \
   --cache-ram 2048 \
@@ -41,6 +65,12 @@ exec "$LLAMA/llama-server" \
   --min-p 0.0 \
   --presence-penalty 0.0 \
   --repeat-penalty 1.0 \
+  \
+  --spec-type draft-mtp --spec-draft-n-max 3 \
+  \
+  -np 2 -cb \
+  \
+  --sleep-idle-seconds 600 \
   \
   --cont-batching \
   --metrics
